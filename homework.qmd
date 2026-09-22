@@ -22,7 +22,7 @@ format:
 
 ```{r}
 #| include: false
-
+library(tidyverse)
 # пакеты подключаются в первом чанке
 ```
 
@@ -50,16 +50,29 @@ format:
 3. Оставьте только нужные столбцы и переименуйте `USUBJID` в `ID`.
 
 ```{r}
-# read_csv
-# select, rename
-# nrow, table, count
+dm <- read_csv("data/dm.csv")
+# широкий формат данных, один пациент - одна строка. Все зарактеристики разложены по отдельным столбцам в этой строке
+dm_new <- dm |>
+  select(USUBJID, AGE, SEX, ARM) |>
+  rename(ID = USUBJID)
+nrow(dm_new)
+table(dm_new$SEX)
+count(dm_new, ARM)
 ```
 
 4. Проверьте, что каждому участнику соответствует ровно одна строка.
    Если идентификатор участника встречается несколько раз, выведите все такие строки.
 
 ```{r}
-# stopifnot, stop
+dup_rows <- dm |> # для проверки дублирующихся строк
+  filter(duplicated(USUBJID) | duplicated(USUBJID, fromLast = T)) # ищем дубли поаорядку и "снизу вверх", чтобы вывелось обе строки, если они есть (а не одна)
+if (nrow(dup_rows) > 0) {
+  print(dup_rows)
+  stop("Обнаружены дублирующиеся ID")
+}
+
+stopifnot(nrow(dup_rows) == 0)
+# Дублирующиеся ID не обнаружены
 ```
 
 5. Выведите общее количество людей, оцененных для включения в исследование.
@@ -69,9 +82,13 @@ format:
 8. Сохраните финальный датафрейм в переменную `dm`.
 
 ```{r}
-# filter
-# mutate
-# factor
+nrow(dm_new)
+mean(dm_new$ARM == "Screen Failure") * 100 # процент не прошедших скрининг
+dm_arm <- dm_new |>
+  filter(ARM %in% c("Placebo", "Xanomeline High Dose")) |>
+  mutate(ARM = factor(ARM))
+table(dm_arm$ARM)
+dm <- dm_arm
 ```
 
 ### 1.2. Лабораторные измерения

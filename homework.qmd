@@ -7,6 +7,9 @@ author:
    - name: Акименкова Александра
      url: https://github.com/akimaldm-png
      roles: Лабораторные измерения
+   - name: Зорина Елена
+     url: https://github.com/el-zorina
+     roles: Витальные показатели
 format:
   html:
     embed-resources: true

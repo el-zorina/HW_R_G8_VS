@@ -4,8 +4,8 @@ author:
    - name: Имя Студента 1
      url: https://github.com/github-username-of-author-1
      roles: Координатор
-   - name: Имя Студента 2
-     url: https://github.com/github-username-of-author-2
+   - name: Акименкова Александра
+     url: https://github.com/akimaldm-png
      roles: Лабораторные измерения
 format:
   html:
